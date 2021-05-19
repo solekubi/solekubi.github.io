@@ -1,0 +1,1 @@
+import{e,o as a,n as o,aA as s}from"./index.59ec6a1c.js";import"./vendor.1bb7b4e1.js";var n=e({name:"Home",components:{},setup(){}});const d=s()(((e,s,n,d,r,t)=>(a(),o("div",null,"首页"))));n.render=d,n.__scopeId="data-v-24ac9d7c";export default n;
