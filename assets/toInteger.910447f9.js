@@ -1,1 +1,0 @@
-import{ax as n}from"./index.5a02fbe8.js";function t(t){var i=function(t){return t?Infinity===(t=n(t))||-Infinity===t?17976931348623157e292*(t<0?-1:1):t==t?t:0:0===t?t:0}(t),r=i%1;return i==i?r?i-r:i:0}export{t};
