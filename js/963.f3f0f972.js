@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkloan"]=self["webpackChunkloan"]||[]).push([[963],{2963:function(n,e,r){r.r(e),r.d(e,{default:function(){return c}});var u=r(6252);const t={id:"role"};function a(n,e,r,a,o,c){return(0,u.wg)(),(0,u.iD)("div",t,"Role")}var o=(0,u.aZ)({setup(){return{}}});o.render=a;var c=o}}]);
+//# sourceMappingURL=963.f3f0f972.js.map
