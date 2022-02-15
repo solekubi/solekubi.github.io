@@ -1,35 +1,20 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
-
-name: Node.js Package
-
-on:
-  push:
-    branches:
-     - main
-     
+name: Build and Deploy
+on: [push]
 jobs:
-  publish:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org
-          
-      - name: build
-        run: |
-          yarn 
-          yarn build
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
 
-      - name: deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
-          # 发布到指定分支
-          BRANCH: gh-pages
-          # 构建成果所在目录,默认位置都是在根目录
-          FOLDER:  ./dist
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build # The folder the action should deploy.
