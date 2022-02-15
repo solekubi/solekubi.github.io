@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkloan"]=self["webpackChunkloan"]||[]).push([[858],{8858:function(n,e,r){r.r(e),r.d(e,{default:function(){return o}});var u=r(6252);function a(n,e,r,a,t,o){const c=(0,u.up)("router-view");return(0,u.wg)(),(0,u.j4)(c)}var t=(0,u.aZ)({name:"BlankLayout"});t.render=a;var o=t}}]);
-//# sourceMappingURL=858.bcd80cfc.js.map

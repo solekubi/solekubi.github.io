@@ -1,0 +1,49 @@
+{
+  "name": "loan",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint --fix src/**/*.{ts,vue} && prettier -w src/**/*.{ts,vue}"
+  },
+  "dependencies": {
+    "@element-plus/icons": "^0.0.11",
+    "axios": "^0.21.1",
+    "core-js": "^3.8.3",
+    "element-plus": "^1.1.0-beta.8",
+    "jwt-decode": "^3.1.2",
+    "lodash-es": "^4.17.21",
+    "throttle-debounce": "^3.0.1",
+    "vue": "^3.0.4",
+    "vue-router": "^4.0.3",
+    "vuex": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.5",
+    "@types/mockjs": "^1.0.4",
+    "@types/throttle-debounce": "^2.1.0",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "@vue/babel-plugin-jsx": "^1.0.7",
+    "@vue/cli-plugin-babel": "~5.0.0-beta.3",
+    "@vue/cli-plugin-eslint": "~5.0.0-beta.3",
+    "@vue/cli-plugin-router": "~5.0.0-beta.3",
+    "@vue/cli-plugin-typescript": "~5.0.0-beta.3",
+    "@vue/cli-plugin-vuex": "~5.0.0-beta.3",
+    "@vue/cli-service": "~5.0.0-beta.3",
+    "@vue/compiler-sfc": "^3.0.4",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "eslint": "^7.20.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.2.0",
+    "mockjs": "^1.1.0",
+    "prettier": "^2.3.2",
+    "pug": "^3.0.2",
+    "pug-plain-loader": "^1.1.0",
+    "sass": "^1.38.2",
+    "sass-loader": "^12.1.0",
+    "typescript": "^4.4.2"
+  }
+}
