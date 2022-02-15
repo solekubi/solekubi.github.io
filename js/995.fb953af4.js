@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkloan"]=self["webpackChunkloan"]||[]).push([[995],{9995:function(n,e,t){t.r(e),t.d(e,{default:function(){return i}});var r=t(6252);const u={id:"table"};function a(n,e){return(0,r.wg)(),(0,r.iD)("div",u,"table")}const c={};c.render=a;var i=c}}]);
+//# sourceMappingURL=995.fb953af4.js.map

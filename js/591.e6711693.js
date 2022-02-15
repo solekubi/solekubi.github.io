@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkloan"]=self["webpackChunkloan"]||[]).push([[591],{4591:function(n,e,t){t.r(e),t.d(e,{default:function(){return c}});var r=t(6252);const u=(0,r.Uk)("默认按钮");function a(n,e,t,a,o,c){const f=(0,r.up)("el-button");return(0,r.wg)(),(0,r.j4)(f,{type:"primary"},{default:(0,r.w5)((()=>[u])),_:1})}var o=(0,r.aZ)({name:"Home"});o.render=a;var c=o}}]);
+//# sourceMappingURL=591.e6711693.js.map
