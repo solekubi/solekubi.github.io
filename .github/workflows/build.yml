@@ -32,4 +32,4 @@ jobs:
           # 发布到指定分支
           BRANCH: gh-pages
           # 构建成果所在目录,默认位置都是在根目录
-          FOLDER:  ./docs/.loan/dist
+          FOLDER:  ./dist
