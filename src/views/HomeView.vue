@@ -74,7 +74,7 @@ import { useConfigStore } from '@/stores/config'
 import { storeToRefs } from 'pinia'
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-import router from '@/router';
+import router from '@/router'
 
 const formRef = ref()
 

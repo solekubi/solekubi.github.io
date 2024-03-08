@@ -1,7 +1,7 @@
 <template>
   <div class="demo-rate-block">
     <span class="demonstration">Default</span>
-     <el-countdown title="倒计时" :value="value" />
+    <el-countdown title="倒计时" :value="value" />
   </div>
   <div class="demo-rate-block">
     <span class="demonstration">Color for different levels</span>
@@ -11,7 +11,7 @@
 <script setup>
 import { useConfigStore } from '@/stores/config'
 import router from '@/router'
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 const { isSetConfig } = useConfigStore()
 
@@ -21,8 +21,7 @@ const { isSetConfig } = useConfigStore()
 
 const value = ref(Date.now() + 1000 * 60 * 60 * 7)
 
-const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900']) 
-
+const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
 </script>
 
 <style scoped>
