@@ -2,35 +2,12 @@ import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useConfigStore = defineStore('config', () => {
-  const dialogVisible = ref(true)
-
+  
   const isSetConfig = ref(false)
 
-  const configs = reactive({
-    schema: '',
-    type: [],
-    cnt: 15,
-    timer: 10
-  })
-
-  const schemaOptions = ref([
-    {
-      label: '加法',
-      value: 'PLUS'
-    },
-    {
-      label: '减法',
-      value: 'MINUS'
-    },
-    {
-      label: '加减混合',
-      value: 'ALL'
-    }
-  ])
-
-  const typeOptions = ref(
+  const bitOptions = ref(
     Array.from(
-      Array.from({ length: 50 }, (_, idx) => (idx + 1) * 10),
+      Array.from({ length: 2 }, (_, idx) => idx + 2),
       (i) => ({
         label: `${i}`,
         value: i
@@ -38,21 +15,47 @@ export const useConfigStore = defineStore('config', () => {
     )
   )
 
-  const hideDialog = () => {
-    dialogVisible.value = false
-  }
+  const schemaOptions = ref([
+    {
+      label: '加法',
+      value: '+'
+    },
+    {
+      label: '减法',
+      value: '-'
+    }
+  ])
 
-  const updateConfigFlag = (flag) => {
+  const typeOptions = ref(
+    Array.from(
+      Array.from({ length: 5 }, (_, idx) => (idx + 1) * 10),
+      (i) => ({
+        label: `${i}以内`,
+        value: i
+      })
+    )
+  )
+
+  const configs = reactive({
+    schema: schemaOptions.value,
+    type: typeOptions.value[0],
+    bit:bitOptions.value[1],
+    cnt: 15,
+    timer: 10
+  })
+
+
+
+  const setConfigFlag = (flag) => {
     isSetConfig.value = flag
   }
 
   return {
     isSetConfig,
-    dialogVisible,
     configs,
     schemaOptions,
     typeOptions,
-    hideDialog,
-    updateConfigFlag
+    bitOptions,
+    setConfigFlag
   }
 })

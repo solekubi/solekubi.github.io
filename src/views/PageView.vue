@@ -1,45 +1,105 @@
 <template>
-  <div class="demo-rate-block">
-    <span class="demonstration">Default</span>
-    <el-countdown title="倒计时" :value="value" />
-  </div>
-  <div class="demo-rate-block">
-    <span class="demonstration">Color for different levels</span>
-    <el-rate v-model="value2" :colors="colors" />
-  </div>
+  <el-page-header title="返回" @back="goBack()">
+    <template #content>
+      <div class="flex">
+        <span class="text-large font-600 mr-3"> {{ title }} </span>
+        <el-tag
+          style="margin: 2px"
+          size="small"
+          v-for="(item, idx) in configs.schema"
+          :key="item"
+          :type="idx == 0 ? 'success' : 'danger'"
+        >
+          {{ item.label }}</el-tag
+        >
+      </div>
+    </template>
+    <template #extra>
+      <el-countdown format="mm:ss" :value="countDown.end" @finish="doFinish">
+        <template #suffix>
+          <el-button size="small" type="primary" class="ml-2" @click="handleSubmit">提交</el-button>
+        </template>
+      </el-countdown>
+    </template>
+    <div class="flex" style="padding-top: 5px">
+      <el-row :gutter="20" v-for="item in calcList" :key="item.id" style="padding-bottom: 5px">
+        <el-col>
+          <el-input v-model="item.value">
+            <template #prepend>
+              <span style="width: 50px">{{ item.formula }}</span>
+            </template>
+          </el-input>
+        </el-col>
+      </el-row>
+    </div>
+    <el-dialog
+      v-model="showScore"
+      align-center
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div class="dialog-score">
+        <span class="demonstration"> {{ correct }} / {{ configs.cnt }}</span>
+        <el-rate size="large" v-model="score" allow-half disabled />
+      </div>
+      <template #footer>
+        <div class="dialog-score">
+          <el-button type="success" :icon="Check" circle @click="showScore = false" />
+        </div>
+      </template>
+    </el-dialog>
+  </el-page-header>
 </template>
 <script setup>
-import { useConfigStore } from '@/stores/config'
 import router from '@/router'
+import { useConfigStore } from '@/stores/config'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '@/stores/app'
 import { ref } from 'vue'
+import { Check } from '@element-plus/icons-vue'
+const appStore = useAppStore()
 
-const { isSetConfig } = useConfigStore()
+const { configs } = useConfigStore()
 
-// if (!isSetConfig) {
-//   router.push({name:"Home"})
-// }
+const { score, countDown, calcList } = storeToRefs(appStore)
 
-const value = ref(Date.now() + 1000 * 60 * 60 * 7)
+const title = configs.type?.label
 
-const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
+appStore.setCountDown(configs.cnt)
+
+appStore.setCalcList(
+  configs.type.value ?? 0,
+  configs.schema?.map((item) => item.value),
+  configs.bit.value ?? 2,
+  configs.cnt ?? 0
+)
+
+const goBack = () => {
+  router.back()
+}
+
+const showScore = ref(false)
+
+const correct = ref(0)
+
+const handleSubmit = () => {
+  correct.value = 0
+  for (const { formula, value } of calcList.value) {
+    if (eval(formula) == Number(value)) {
+      correct.value++
+    }
+  }
+  appStore.setScore(correct.value, configs.cnt)
+  showScore.value = true
+}
+
+const doFinish = () => {}
 </script>
-
 <style scoped>
-.demo-rate-block {
-  padding: 30px 0;
-  text-align: center;
-  border-right: solid 1px var(--el-border-color);
-  display: inline-block;
-  width: 49%;
-  box-sizing: border-box;
-}
-.demo-rate-block:last-child {
-  border-right: none;
-}
-.demo-rate-block .demonstration {
-  display: block;
-  color: var(--el-text-color-secondary);
-  font-size: 14px;
-  margin-bottom: 20px;
+.dialog-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

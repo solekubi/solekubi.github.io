@@ -1,13 +1,6 @@
 <template>
-  <el-dialog
-    v-model="dialogVisible"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :show-close="false"
-    title="参数配置"
-    style="max-width: 600px;min-width: 400px"
-    align-center
-  >
+  <el-card>
+    <template #header>配置参数</template>
     <el-form
       :model="configs"
       label-width="auto"
@@ -17,34 +10,29 @@
       :rules="rules"
     >
       <el-form-item label="题型" prop="schema">
-        <el-select v-model="configs.schema" placeholder="请选择题型">
-          <el-option
-            v-for="item in schemaOptions"
-            :key="item"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="类型" prop="type">
         <el-select
-          v-model="configs.type"
-          multiple
+          v-model="configs.schema"
           collapse-tags
           collapse-tags-tooltip
           :max-collapse-tags="3"
-          placeholder="选择..."
+          multiple
+          placeholder="请选择题型"
         >
-          <el-option
-            v-for="item in typeOptions"
-            :key="item"
-            :label="item.label"
-            :value="item.value"
-          />
+          <el-option v-for="item in schemaOptions" :key="item" :label="item.label" :value="item" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="位数" prop="bit">
+        <el-select v-model="configs.bit" placeholder="选择...">
+          <el-option v-for="item in bitOptions" :key="item" :label="item.label" :value="item" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="类型" prop="type">
+        <el-select v-model="configs.type" placeholder="选择...">
+          <el-option v-for="item in typeOptions" :key="item" :label="item.label" :value="item" />
         </el-select>
       </el-form-item>
       <el-form-item label="数量" prop="cnt">
-        <el-input-number v-model="configs.cnt" controls-position="right" :min="10" :max="50" />
+        <el-input-number v-model="configs.cnt" controls-position="right" :min="5" :max="60" />
       </el-form-item>
       <el-form-item label="计时" prop="timer">
         <el-input
@@ -60,13 +48,11 @@
           </template>
         </el-input>
       </el-form-item>
+      <el-form-item>
+        <el-button type="success" @click="onSubmit" round>提交</el-button>
+      </el-form-item>
     </el-form>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button type="primary" @click="onSubmit()"> 确认 </el-button>
-      </div>
-    </template>
-  </el-dialog>
+  </el-card>
 </template>
 
 <script setup>
@@ -80,10 +66,11 @@ const formRef = ref()
 
 const configStore = useConfigStore()
 
-const { dialogVisible, configs, schemaOptions, typeOptions } = storeToRefs(configStore)
+const { configs, schemaOptions, typeOptions, bitOptions } = storeToRefs(configStore)
 
 const rules = reactive({
   schema: [{ required: true, message: '请选择题型！', trigger: 'change' }],
+  bit: [{ required: true, message: '请选择类型！', trigger: 'change' }],
   type: [{ required: true, message: '请选择类型！', trigger: 'change' }],
   cnt: [{ required: true, message: '请选择数量！', trigger: 'change' }],
   timer: [{ required: true, message: '请选择计时！', trigger: 'change' }]
@@ -92,8 +79,7 @@ const rules = reactive({
 const onSubmit = () => {
   formRef.value.validate((valid) => {
     if (valid) {
-      configStore.updateConfigFlag(true)
-      configStore.hideDialog()
+      configStore.setConfigFlag(true)
       router.push({ name: 'Page' })
     } else {
       ElMessage.error('必填项不能为空')
