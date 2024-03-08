@@ -5,7 +5,7 @@
     :close-on-press-escape="false"
     :show-close="false"
     title="参数配置"
-    width="500"
+    style="max-width: 600px;min-width: 400px"
     align-center
   >
     <el-form
