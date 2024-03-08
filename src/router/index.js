@@ -5,8 +5,17 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'Home',
       component: () => import('@/views/HomeView.vue')
+    },
+    {
+      path: '/page',
+      name: 'Page',
+      component: () => import('@/views/PageView.vue')
+    },
+    {
+      path: '/:catchAll(.*)*',
+      component: () => import('@/views/NotFound.vue')
     }
   ]
 })
