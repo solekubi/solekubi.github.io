@@ -21,12 +21,17 @@ const router = createRouter({
           path: 'papers',
           name: 'Paper',
           component: () => import('@/views/PaperView.vue')
+        },
+        {
+          path: 'mistakes',
+          name: 'Mistake',
+          component: () => import('@/views/MistakeView.vue')
         }
       ]
     },
     {
       path: '/:catchAll(.*)*',
-      component: () => import('@/views/404.vue')
+      component: () => import('@/views/NotFoundView.vue')
     }
   ]
 })

@@ -1,5 +1,5 @@
 <template>
-  <div id="container" class="container">
+  <div ref="paper" class="container">
     <div class="header">
       <div class="header__left">
         <el-button :icon="Back" link size="large" @click="goBack">返回</el-button>
@@ -42,19 +42,27 @@
     </div>
   </div>
   <el-dialog
+    style="min-width: 250px"
     v-model="showScore"
     align-center
     :show-close="false"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
   >
-    <div class="dialog-score">
+    <div class="dialog__header">
       <span class="demonstration"> {{ correctCnt }} / {{ configs.cnt }}</span>
-      <el-rate size="large" v-model="score" allow-half disabled />
+      <el-rate size="large" :value="score" allow-half disabled />
     </div>
     <template #footer>
-      <div class="dialog-score">
+      <div class="dialog__footer">
         <el-button type="success" :icon="Check" @click="showScore = false">确认</el-button>
+        <el-button
+          type="danger"
+          :icon="View"
+          @click="$router.push({ name: 'Mistake' })"
+          v-if="score < 5"
+          >查看错题</el-button
+        >
       </div>
     </template>
   </el-dialog>
@@ -66,7 +74,7 @@ import { useConfigStore } from '@/stores/config'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { computed, ref } from 'vue'
-import { Check, Back } from '@element-plus/icons-vue'
+import { Check, Back, View } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 
 const appStore = useAppStore()
@@ -136,10 +144,12 @@ const percentage = computed(() => {
   return Math.round((completed / configs.value.cnt) * 100)
 })
 
+const paper = ref()
+
 const containerHeight = computed(() => {
-  const app = document.getElementById('app')
-  const container = document.getElementById('container')
-  return container?.clientHeight > app?.clientHeight ? '100%' : 'auto'
+  const a =  paper?.value.clientHeight ?? 0
+  const b = window.innerHeight ?? 0
+  return a > b ? '100%' : 'auto'
 })
 
 const doFinish = () => {
@@ -155,10 +165,19 @@ const doFinish = () => {
 }
 </script>
 <style lang="scss" scoped>
-.dialog-score {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.dialog {
+  &__header {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    justify-items: center;
+    align-items: center;
+  }
+  &__footer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    justify-items: center;
+    align-items: center;
+  }
 }
 .container {
   display: grid;

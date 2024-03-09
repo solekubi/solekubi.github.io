@@ -11,6 +11,8 @@ export const useAppStore = defineStore('app', () => {
 
   const correctCnt = ref(0)
 
+  const mistakes = ref([])
+
   const setComplete = (flag) => {
     completed.value = flag
   }
@@ -24,8 +26,11 @@ export const useAppStore = defineStore('app', () => {
   const submit = async (arithmeticList) => {
     correctCnt.value = 0
     for (const { formula, value } of arithmeticList) {
+      const correctValue = eval(formula)
       if (eval(formula) == Number(value)) {
         ++correctCnt.value
+      } else {
+        mistakes.value.push({ formula, value, correctValue })
       }
     }
     setComplete(true)
@@ -35,6 +40,7 @@ export const useAppStore = defineStore('app', () => {
     completed,
     correctCnt,
     countDown,
+    mistakes,
     setComplete,
     setCountDown,
     submit
