@@ -22,14 +22,14 @@
           cancel-button-text="否"
         >
           <template #reference>
-            <el-button type="warning" >提交</el-button>
+            <el-button type="warning">提交</el-button>
           </template>
         </el-popconfirm>
       </div>
     </div>
     <el-divider style="margin: 12px 0" />
     <div class="body">
-      <div class="body_item" v-for="item in calcList" :key="item.id">
+      <div class="body_item" v-for="item in arithmeticList" :key="item.id">
         <el-tag class="header__body_item_left" type="primary"> {{ item.formula + ' =' }}</el-tag>
         <el-input
           class="header__body_item_right"
@@ -49,7 +49,7 @@
     :close-on-press-escape="false"
   >
     <div class="dialog-score">
-      <span class="demonstration"> {{ correct }} / {{ configs.cnt }}</span>
+      <span class="demonstration"> {{ correctCnt }} / {{ configs.cnt }}</span>
       <el-rate size="large" v-model="score" allow-half disabled />
     </div>
     <template #footer>
@@ -59,6 +59,7 @@
     </template>
   </el-dialog>
 </template>
+
 <script setup>
 import router from '@/router'
 import { useConfigStore } from '@/stores/config'
@@ -67,23 +68,19 @@ import { useAppStore } from '@/stores/app'
 import { computed, ref } from 'vue'
 import { Check, Back } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
+
 const appStore = useAppStore()
 
-const { configs } = useConfigStore()
+const configStore = useConfigStore()
 
-const { isComplete, countDown, calcList } = storeToRefs(appStore)
+const { configs, arithmeticList } = storeToRefs(configStore)
 
-appStore.setCountDown(configs.timer)
+const { completed, correctCnt, countDown } = storeToRefs(appStore)
 
-appStore.setCalcList(
-  configs.type.value ?? 0,
-  configs.schema?.map((item) => item.value),
-  configs.bit.value ?? 2,
-  configs.cnt ?? 0
-)
+appStore.setCountDown(configs.value.timer)
 
 const goBack = () => {
-  if (!isComplete.value) {
+  if (!completed.value) {
     ElMessageBox.confirm('此操作会清空已经做的题目，是否返回上一页？', '警告', {
       confirmButtonText: '确认',
       showCancelButton: false,
@@ -92,15 +89,19 @@ const goBack = () => {
       type: 'warning',
       center: true,
       roundButton: true
-    }).then(() => {
-      router.push({ path: '/homes' }).then(() => {
-        appStore.setComplete(false)
-      })
-    }).catch((err) => {
-   console.log(err)
     })
+      .then(() => {
+        router.push({ name: 'Config' }).then(() => {
+          configStore.setConfigFlag(false)
+          appStore.setComplete(false)
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   } else {
-    router.push({ path: '/homes' }).then(() => {
+    router.push({ name: 'Config' }).then(() => {
+      configStore.setConfigFlag(false)
       appStore.setComplete(false)
     })
   }
@@ -108,21 +109,13 @@ const goBack = () => {
 
 const showScore = ref(false)
 
-const correct = ref(0)
-
 const score = computed(() => {
-  return Number(((correct.value / configs.cnt) * 5).toFixed(2))
+  return Number(((correctCnt.value / configs.value.cnt) * 5).toFixed(2))
 })
 
 const handleSubmit = () => {
-  correct.value = 0
   showScore.value = true
-  for (const { formula, value } of calcList.value) {
-    if (eval(formula) == Number(value)) {
-      ++correct.value
-    }
-  }
-  appStore.setComplete(true)
+  appStore.submit(arithmeticList.value)
 }
 
 const colors = [
@@ -135,18 +128,18 @@ const colors = [
 
 const percentage = computed(() => {
   let completed = 0
-  for (const { value } of calcList.value) {
+  for (const { value } of arithmeticList.value) {
     if (typeof value !== 'undefined' && String(value).replace(/\s+/g, '') !== '') {
       completed++
     }
   }
-  return Math.round((completed / configs.cnt) * 100)
+  return Math.round((completed / configs.value.cnt) * 100)
 })
 
 const containerHeight = computed(() => {
   const app = document.getElementById('app')
   const container = document.getElementById('container')
-  return container.clientHeight > app.clientHeight ? '100%' : 'auto'
+  return container?.clientHeight > app?.clientHeight ? '100%' : 'auto'
 })
 
 const doFinish = () => {
@@ -157,7 +150,7 @@ const doFinish = () => {
     closeOnPressEscape: false,
     type: 'warning',
     center: true,
-    showClose:false,
+    showClose: false
   }).then(handleSubmit)
 }
 </script>

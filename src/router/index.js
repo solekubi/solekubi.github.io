@@ -1,3 +1,4 @@
+import { useConfigStore } from '@/stores/config'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -5,19 +6,21 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'Root',
-      redirect: () => {return {path:"homes"}},
+      name: 'Home',
+      redirect: () => {
+        return { path: 'configs' }
+      },
       component: () => import('@/layout/MainLayout.vue'),
       children: [
         {
-          path: 'homes',
-          name: 'Home',
-          component: () => import('@/views/HomeView.vue')
+          path: 'configs',
+          name: 'Config',
+          component: () => import('@/views/ConfigView.vue')
         },
         {
-          path: 'pages',
-          name: 'Page',
-          component: () => import('@/views/PageView.vue')
+          path: 'papers',
+          name: 'Paper',
+          component: () => import('@/views/PaperView.vue')
         }
       ]
     },
@@ -26,6 +29,15 @@ const router = createRouter({
       component: () => import('@/views/404.vue')
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const { configed } = useConfigStore()
+  if (!configed && to.name === 'Paper') {
+    next({ path: '/' })
+    return
+  }
+  next()
 })
 
 export default router
