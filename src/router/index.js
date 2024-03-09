@@ -6,7 +6,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'Root',
-      redirect: '/homes',
+      redirect: () => {return {path:"homes"}},
+      component: () => import('@/layout/MainLayout.vue'),
       children: [
         {
           path: 'homes',
@@ -20,10 +21,9 @@ const router = createRouter({
         }
       ]
     },
-
     {
       path: '/:catchAll(.*)*',
-      component: () => import('@/views/NotFound.vue')
+      component: () => import('@/views/404.vue')
     }
   ]
 })

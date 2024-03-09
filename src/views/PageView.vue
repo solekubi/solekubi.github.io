@@ -22,7 +22,7 @@
           cancel-button-text="否"
         >
           <template #reference>
-            <el-button size="small" type="warning" round>提交</el-button>
+            <el-button type="warning" >提交</el-button>
           </template>
         </el-popconfirm>
       </div>
@@ -54,7 +54,7 @@
     </div>
     <template #footer>
       <div class="dialog-score">
-        <el-button type="success" :icon="Check" circle @click="showScore = false" />
+        <el-button type="success" :icon="Check" @click="showScore = false">确认</el-button>
       </div>
     </template>
   </el-dialog>
@@ -96,6 +96,8 @@ const goBack = () => {
       router.push({ path: '/homes' }).then(() => {
         appStore.setComplete(false)
       })
+    }).catch((err) => {
+   console.log(err)
     })
   } else {
     router.push({ path: '/homes' }).then(() => {
@@ -155,7 +157,7 @@ const doFinish = () => {
     closeOnPressEscape: false,
     type: 'warning',
     center: true,
-    roundButton: true
+    showClose:false,
   }).then(handleSubmit)
 }
 </script>
