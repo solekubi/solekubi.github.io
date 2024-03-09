@@ -2,33 +2,35 @@
   <el-page-header title="返回" @back="goBack()">
     <template #content>
       <div class="header__content">
-        <span class="text-large font-600 mr-3"> {{ title }} </span>
-        <div>
-          <el-tag
-            style="margin: 2px"
-            size="small"
-            v-for="(item, idx) in configs.schema"
-            :key="item"
-            :type="idx == 0 ? 'success' : 'danger'"
-          >
-            {{ item.label }}</el-tag
-          >
-        </div>
+        <el-tag size="small"> {{ title }}</el-tag>
+        <el-tag
+          size="small"
+          v-for="(item, idx) in configs.schema"
+          :key="item"
+          :type="idx == 0 ? 'success' : 'danger'"
+        >
+          {{ item.label }}</el-tag
+        >
       </div>
     </template>
     <template #extra>
       <div class="header__extra">
-        <el-progress type="circle" indeterminate :percentage="percentage" :color="colors" width="50" />
+        <el-progress
+          type="circle"
+          indeterminate
+          :percentage="percentage"
+          :color="colors"
+          :width="50"
+        />
         <el-countdown format="mm:ss" :value="countDown.end" @finish="doFinish" />
         <el-button size="small" type="warning" @click="handleSubmit" round>提交</el-button>
       </div>
     </template>
     <div class="header__body">
-      <el-input v-for="item in calcList" :key="item.id" v-model="item.value">
-        <template #prepend>
-          <span>{{ item.formula + ' = ' }}</span>
-        </template>
-      </el-input>
+      <div class="header__body_item" v-for="item in calcList" :key="item.id">
+        <span class="header__body_item_left">{{ item.formula + ' = ' }}</span>
+        <el-input-number controls-position="right" v-model="item.value" />
+      </div>
     </div>
     <el-dialog
       v-model="showScore"
@@ -74,7 +76,7 @@ appStore.setCalcList(
 )
 
 const goBack = () => {
-  router.back()
+  router.push({ path: '/' })
 }
 
 const showScore = ref(false)
@@ -102,11 +104,11 @@ const colors = [
 const percentage = computed(() => {
   let completed = 0
   for (const { value } of calcList.value) {
-    if (typeof value !== 'undefined' && String(value).replace(/\s+/g,"") !== '') {
+    if (typeof value !== 'undefined' && String(value).replace(/\s+/g, '') !== '') {
       completed++
     }
   }
-  return ((completed / configs.cnt ) * 100).toFixed(1)
+  return Math.round((completed / configs.cnt) * 100)
 })
 
 const doFinish = () => {}
@@ -120,7 +122,8 @@ const doFinish = () => {}
 .header {
   &__content {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 2px;
   }
   &__extra {
     display: grid;
@@ -136,6 +139,12 @@ const doFinish = () => {}
     column-gap: 10px;
     grid-template-rows: auto;
     row-gap: 10px;
+    &_item {
+       display: grid;
+       grid-template-columns: 1fr auto;
+       justify-items: center;
+       align-items: center;
+    }
   }
 }
 </style>

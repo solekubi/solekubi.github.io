@@ -92,10 +92,9 @@ const onSubmit = () => {
 .container {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  height: 100%;
   &__footer {
     display: grid;
-    justify-content: center;
+    justify-content: end;
   }
 }
 </style>
