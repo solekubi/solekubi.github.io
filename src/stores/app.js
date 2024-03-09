@@ -9,8 +9,6 @@ export const useAppStore = defineStore('app', () => {
     end: 0
   })
 
-  const score = ref(3)
-
   const calcList = ref([])
 
   const setComplete = (flag) => {
@@ -21,10 +19,6 @@ export const useAppStore = defineStore('app', () => {
     const t = Date.now()
     countDown.start = t
     countDown.end = countDown.start + 1000 * 60 * (value ?? 0)
-  }
-
-  const setScore = (value, total) => {
-    score.value = Number(((value / total) * 5).toFixed(2))
   }
 
   const setCalcList = (val, ops, bit, cnt) => {
@@ -55,12 +49,10 @@ export const useAppStore = defineStore('app', () => {
   }
   return {
     isComplete,
-    score,
     countDown,
     calcList,
     setCalcList,
     setComplete,
     setCountDown,
-    setScore
   }
 })

@@ -1,20 +1,13 @@
 <template>
-  <el-page-header title="返回" @back="goBack()">
-    <template #content>
-      <div class="header__content">
-        <el-tag size="small"> {{ title }}</el-tag>
-        <el-tag
-          size="small"
-          v-for="(item, idx) in configs.schema"
-          :key="item"
-          :type="idx == 0 ? 'success' : 'danger'"
-        >
-          {{ item.label }}</el-tag
-        >
+  <div class="container">
+    <div class="header">
+      <div class="header__left">
+        <el-button :icon="Back" link size="large" @click="goBack">返回</el-button>
       </div>
-    </template>
-    <template #extra>
-      <div class="header__extra">
+      <div class="header__mid">
+        <el-countdown format="mm:ss" :value="countDown.end" @finish="doFinish" />
+      </div>
+      <div class="header__right">
         <el-progress
           type="circle"
           indeterminate
@@ -22,34 +15,40 @@
           :color="colors"
           :width="50"
         />
-        <el-countdown format="mm:ss" :value="countDown.end" @finish="doFinish" />
         <el-button size="small" type="warning" @click="handleSubmit" round>提交</el-button>
       </div>
-    </template>
-    <div class="header__body">
-      <div class="header__body_item" v-for="item in calcList" :key="item.id">
-        <span class="header__body_item_left">{{ item.formula + ' = ' }}</span>
-        <el-input-number controls-position="right" v-model="item.value" />
+    </div>
+    <el-divider style="margin: 12px 0" />
+    <div class="body">
+      <div class="body_item" v-for="item in calcList" :key="item.id">
+        <el-tag class="header__body_item_left" type="primary"> {{ item.formula + ' =' }}</el-tag>
+        <el-input
+          class="header__body_item_right"
+          type="number"
+          size="small"
+          controls-position="right"
+          v-model="item.value"
+        />
       </div>
     </div>
-    <el-dialog
-      v-model="showScore"
-      align-center
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-    >
+  </div>
+  <el-dialog
+    v-model="showScore"
+    align-center
+    :show-close="false"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
+    <div class="dialog-score">
+      <span class="demonstration"> {{ correct }} / {{ configs.cnt }}</span>
+      <el-rate size="large" v-model="score" allow-half disabled />
+    </div>
+    <template #footer>
       <div class="dialog-score">
-        <span class="demonstration"> {{ correct }} / {{ configs.cnt }}</span>
-        <el-rate size="large" v-model="score" allow-half disabled />
+        <el-button type="success" :icon="Check" circle @click="showScore = false" />
       </div>
-      <template #footer>
-        <div class="dialog-score">
-          <el-button type="success" :icon="Check" circle @click="showScore = false" />
-        </div>
-      </template>
-    </el-dialog>
-  </el-page-header>
+    </template>
+  </el-dialog>
 </template>
 <script setup>
 import router from '@/router'
@@ -57,14 +56,12 @@ import { useConfigStore } from '@/stores/config'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { computed, ref } from 'vue'
-import { Check } from '@element-plus/icons-vue'
+import { Check, Back } from '@element-plus/icons-vue'
 const appStore = useAppStore()
 
 const { configs } = useConfigStore()
 
-const { score, countDown, calcList } = storeToRefs(appStore)
-
-const title = configs.type?.label
+const { countDown, calcList } = storeToRefs(appStore)
 
 appStore.setCountDown(configs.cnt)
 
@@ -83,12 +80,16 @@ const showScore = ref(false)
 
 const correct = ref(0)
 
+const score = computed(() => {
+  return Number(((correct.value / configs.cnt) * 5).toFixed(2))
+})
+
 const handleSubmit = () => {
   correct.value = 0
   showScore.value = true
   for (const { formula, value } of calcList.value) {
     if (eval(formula) == Number(value)) {
-      appStore.setScore(++correct.value, configs.cnt)
+      ++correct.value
     }
   }
 }
@@ -119,32 +120,43 @@ const doFinish = () => {}
   flex-direction: column;
   align-items: center;
 }
+.container {
+  display: grid;
+  grid-template-rows: repeat(2, auto) 1fr;
+  overflow: auto;
+}
 .header {
-  &__content {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  &__left {
+    justify-self: start;
+    align-self: center;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
     column-gap: 2px;
   }
-  &__extra {
+  &__mid {
+    justify-self: center;
+    align-self: center;
+  }
+  &__right {
+    justify-self: end;
     display: grid;
-    grid-template-columns: repeat(2, 1fr) auto;
-    column-gap: 10px;
+    grid-template-columns: 1fr auto;
     justify-items: center;
     align-items: center;
+    column-gap: 5px;
   }
-  &__body {
+}
+.body {
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  column-gap: 5px;
+  row-gap: 10px;
+  &_item {
     display: grid;
-    padding-top: 10px;
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 10px;
-    grid-template-rows: auto;
-    row-gap: 10px;
-    &_item {
-       display: grid;
-       grid-template-columns: 1fr auto;
-       justify-items: center;
-       align-items: center;
-    }
+    grid-template-columns: minmax(90px, 1fr) auto;
   }
 }
 </style>
