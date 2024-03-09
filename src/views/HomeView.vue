@@ -61,7 +61,7 @@ import { storeToRefs } from 'pinia'
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
-
+import { ulid } from 'ulid'
 const formRef = ref()
 
 const configStore = useConfigStore()
@@ -77,6 +77,7 @@ const rules = reactive({
 })
 
 const onSubmit = () => {
+  configs.value.id = ulid()
   formRef.value.validate((valid) => {
     if (valid) {
       configStore.setConfigFlag(true)

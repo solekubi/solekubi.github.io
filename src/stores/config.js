@@ -2,7 +2,6 @@ import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useConfigStore = defineStore('config', () => {
-  
   const isSetConfig = ref(false)
 
   const bitOptions = ref(
@@ -37,14 +36,13 @@ export const useConfigStore = defineStore('config', () => {
   )
 
   const configs = reactive({
+    id: undefined,
     schema: schemaOptions.value,
     type: typeOptions.value[0],
-    bit:bitOptions.value[1],
+    bit: bitOptions.value[1],
     cnt: 15,
     timer: 10
   })
-
-
 
   const setConfigFlag = (flag) => {
     isSetConfig.value = flag

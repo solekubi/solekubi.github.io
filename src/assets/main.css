@@ -1,7 +1,7 @@
 @import './base.css';
 
 #app {
-  /* height: calc(100vh); */
+  height: calc(100vh);
   width: calc(100vw);
   margin: 0 auto;
   padding: 1rem;

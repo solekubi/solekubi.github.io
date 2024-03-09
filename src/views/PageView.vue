@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="container" class="container">
     <div class="header">
       <div class="header__left">
         <el-button :icon="Back" link size="large" @click="goBack">返回</el-button>
@@ -15,7 +15,16 @@
           :color="colors"
           :width="50"
         />
-        <el-button size="small" type="warning" @click="handleSubmit" round>提交</el-button>
+        <el-popconfirm
+          title="是否提交考卷?"
+          @confirm="handleSubmit"
+          confirm-button-text="是"
+          cancel-button-text="否"
+        >
+          <template #reference>
+            <el-button size="small" type="warning" round>提交</el-button>
+          </template>
+        </el-popconfirm>
       </div>
     </div>
     <el-divider style="margin: 12px 0" />
@@ -57,13 +66,14 @@ import { storeToRefs } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { computed, ref } from 'vue'
 import { Check, Back } from '@element-plus/icons-vue'
+import { ElMessageBox } from 'element-plus'
 const appStore = useAppStore()
 
 const { configs } = useConfigStore()
 
-const { countDown, calcList } = storeToRefs(appStore)
+const { isComplete, countDown, calcList } = storeToRefs(appStore)
 
-appStore.setCountDown(configs.cnt)
+appStore.setCountDown(configs.timer)
 
 appStore.setCalcList(
   configs.type.value ?? 0,
@@ -73,7 +83,25 @@ appStore.setCalcList(
 )
 
 const goBack = () => {
-  router.push({ path: '/' })
+  if (!isComplete.value) {
+    ElMessageBox.confirm('此操作会清空已经做的题目，是否返回上一页？', '警告', {
+      confirmButtonText: '确认',
+      showCancelButton: false,
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+      type: 'warning',
+      center: true,
+      roundButton: true
+    }).then(() => {
+      router.push({ path: '/homes' }).then(() => {
+        appStore.setComplete(false)
+      })
+    })
+  } else {
+    router.push({ path: '/homes' }).then(() => {
+      appStore.setComplete(false)
+    })
+  }
 }
 
 const showScore = ref(false)
@@ -92,6 +120,7 @@ const handleSubmit = () => {
       ++correct.value
     }
   }
+  appStore.setComplete(true)
 }
 
 const colors = [
@@ -112,7 +141,23 @@ const percentage = computed(() => {
   return Math.round((completed / configs.cnt) * 100)
 })
 
-const doFinish = () => {}
+const containerHeight = computed(() => {
+  const app = document.getElementById('app')
+  const container = document.getElementById('container')
+  return container.clientHeight > app.clientHeight ? '100%' : 'auto'
+})
+
+const doFinish = () => {
+  ElMessageBox.confirm('已经到时间啦！', '警告', {
+    confirmButtonText: '确认',
+    showCancelButton: false,
+    closeOnClickModal: false,
+    closeOnPressEscape: false,
+    type: 'warning',
+    center: true,
+    roundButton: true
+  }).then(handleSubmit)
+}
 </script>
 <style lang="scss" scoped>
 .dialog-score {
@@ -124,6 +169,8 @@ const doFinish = () => {}
   display: grid;
   grid-template-rows: repeat(2, auto) 1fr;
   overflow: auto;
+  width: 100%;
+  height: v-bind(containerHeight);
 }
 .header {
   display: grid;
@@ -156,6 +203,7 @@ const doFinish = () => {}
   row-gap: 10px;
   &_item {
     display: grid;
+    max-height: 24px;
     grid-template-columns: minmax(90px, 1fr) auto;
   }
 }
