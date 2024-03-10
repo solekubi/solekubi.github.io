@@ -55,9 +55,10 @@
     </div>
     <template #footer>
       <div class="dialog__footer">
-        <el-button type="success" :icon="Check" @click="showScore = false">确认</el-button>
+        <el-button type="success" :icon="Check" @click="showScore = false" :style="{justifySelf: 'end'}">确认</el-button>
         <el-button
           type="danger"
+          style="justify-self: start;"
           :icon="View"
           @click="$router.push({ name: 'Mistake' })"
           v-if="score < 5"
@@ -174,7 +175,7 @@ const doFinish = () => {
   }
   &__footer {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: repeat(2,auto);
     justify-items: center;
     align-items: center;
   }

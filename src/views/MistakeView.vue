@@ -10,8 +10,8 @@
       <el-table
         class="body__table"
         :data="mistakes"
-        stripe 
-        border 
+        stripe
+        border
         :highlight-current-row="true"
         :style="{
           width: '100%',
@@ -19,7 +19,11 @@
         }"
       >
         <el-table-column fixed align="center" prop="formula" label="公式" />
-        <el-table-column align="center" prop="value" label="错误" />
+        <el-table-column align="center" prop="value" label="错误">
+          <template #default="scope">
+            <el-link type="danger" disabled>{{ scope.row.value }}</el-link>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="correctValue" label="正确" />
       </el-table>
     </div>
