@@ -61,6 +61,7 @@ import { storeToRefs } from 'pinia'
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
+import * as lebaoWasm from "@solekubi/lebao-wasm"
 
 const formRef = ref()
 
@@ -88,6 +89,9 @@ const onSubmit = () => {
     }
   })
 }
+
+lebaoWasm.greet("123")
+
 </script>
 <style lang="scss" scoped>
 .container {

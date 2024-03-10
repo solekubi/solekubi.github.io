@@ -1,0 +1,14 @@
+{
+  "name": "@solekubi/lebao-wasm",
+  "version": "0.1.0",
+  "files": [
+    "lebao_wasm_bg.wasm",
+    "lebao_wasm.js",
+    "lebao_wasm_bg.js"
+  ],
+  "module": "lebao_wasm.js",
+  "sideEffects": [
+    "./lebao_wasm.js",
+    "./snippets/*"
+  ]
+}
