@@ -5,7 +5,12 @@
         <el-button :icon="Back" link size="large" @click="goBack">返回</el-button>
       </div>
       <div class="header__mid">
-        <el-countdown format="mm:ss" :value="countDown.end" @finish="doFinish" />
+        <el-countdown
+          format="mm:ss"
+          :value="countDown.end"
+          :colors="['#409eff', '#67c23a', '#FF9900']"
+          @finish="doFinish"
+        />
       </div>
       <div class="header__right">
         <el-progress
@@ -49,16 +54,24 @@
     :close-on-click-modal="false"
     :close-on-press-escape="false"
   >
-    <div class="dialog__header">
-      <span class="demonstration"> {{ correctCnt }} / {{ configs.cnt }}</span>
-      <el-rate size="large" :value="score" allow-half disabled />
-    </div>
+    <Transition @before-enter="onBeforeEnter" @enter="onEnter">
+      <div class="dialog__header" :key="correctCnt">
+        <span :style="{ fontSize: 'xx-large' }"> {{ correctCnt }} / {{ configs.cnt }}</span>
+        <el-rate size="large" v-model="score" allow-half disabled />
+      </div>
+    </Transition>
     <template #footer>
       <div class="dialog__footer">
-        <el-button type="success" :icon="Check" @click="showScore = false" :style="{justifySelf: 'end'}">确认</el-button>
+        <el-button
+          type="success"
+          :icon="Check"
+          @click="showScore = false"
+          :style="{ justifySelf: 'end' }"
+          >确认</el-button
+        >
         <el-button
           type="danger"
-          style="justify-self: start;"
+          style="justify-self: start"
           :icon="View"
           @click="$router.push({ name: 'Mistake' })"
           v-if="score < 5"
@@ -77,6 +90,7 @@ import { useAppStore } from '@/stores/app'
 import { computed, ref } from 'vue'
 import { Check, Back, View } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
+import gsap from 'gsap'
 
 const appStore = useAppStore()
 
@@ -118,9 +132,7 @@ const goBack = () => {
 
 const showScore = ref(false)
 
-const score = computed(() => {
-  return Number(((correctCnt.value / configs.value.cnt) * 5).toFixed(2))
-})
+const score = computed(() => Number(((correctCnt.value / configs.value.cnt) * 5).toFixed(1)))
 
 const handleSubmit = () => {
   showScore.value = true
@@ -148,7 +160,7 @@ const percentage = computed(() => {
 const paper = ref()
 
 const containerHeight = computed(() => {
-  const a =  paper?.value.clientHeight ?? 0
+  const a = paper?.value.clientHeight ?? 0
   const b = window.innerHeight ?? 0
   return a > b ? '100%' : 'auto'
 })
@@ -164,6 +176,25 @@ const doFinish = () => {
     showClose: false
   }).then(handleSubmit)
 }
+
+function onBeforeEnter(el) {
+  gsap.set(el, {
+    scaleX: 0.25,
+    scaleY: 0.25,
+    opacity: 1
+  })
+}
+
+function onEnter(el, done) {
+  gsap.to(el, {
+    duration: 1,
+    scaleX: 1,
+    scaleY: 1,
+    opacity: 1,
+    ease: 'elastic.inOut(2.5, 1)',
+    onComplete: done
+  })
+}
 </script>
 <style lang="scss" scoped>
 .dialog {
@@ -175,7 +206,7 @@ const doFinish = () => {
   }
   &__footer {
     display: grid;
-    grid-template-columns: repeat(2,auto);
+    grid-template-columns: repeat(2, auto);
     justify-items: center;
     align-items: center;
   }

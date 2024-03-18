@@ -25,6 +25,7 @@ export const useAppStore = defineStore('app', () => {
 
   const submit = async (arithmeticList) => {
     correctCnt.value = 0
+    mistakes.value = []
     for (const { formula, value } of arithmeticList) {
       const correctValue = eval(formula)
       if (eval(formula) == Number(value)) {
