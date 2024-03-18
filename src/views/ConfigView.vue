@@ -62,10 +62,13 @@ import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 import * as lebaoWasm from "@solekubi/lebao-wasm"
+import { useAppStore } from '@/stores/app'
 
 const formRef = ref()
 
 const configStore = useConfigStore()
+
+const appStore = useAppStore()
 
 const { configs, schemaOptions, typeOptions, bitOptions } = storeToRefs(configStore)
 
@@ -81,7 +84,9 @@ const onSubmit = () => {
   formRef.value.validate((valid) => {
     if (valid) {
       configStore.submit().then(()=> {
-        router.push({ name: 'Paper' })
+        router.push({ name: 'Paper' }).then(()=> {
+          appStore.playCountDown()
+        })
       })     
     } else {
       ElMessage.error('必填项不能为空')

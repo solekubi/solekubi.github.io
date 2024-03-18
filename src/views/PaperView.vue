@@ -1,16 +1,18 @@
 <template>
   <div ref="paper" class="container">
+    <audio ref="audioRef" src="/audio/countdown.mp3"></audio>
     <div class="header">
       <div class="header__left">
         <el-button :icon="Back" link size="large" @click="goBack">返回</el-button>
       </div>
       <div class="header__mid">
-        <el-countdown
+        <!-- <el-countdown
           format="mm:ss"
           :value="countDown.end"
           :colors="['#409eff', '#67c23a', '#FF9900']"
           @finish="doFinish"
-        />
+        /> -->
+        <span> {{ countDown.format }}</span>
       </div>
       <div class="header__right">
         <el-progress
@@ -65,7 +67,7 @@
         <el-button
           type="success"
           :icon="Check"
-          @click="showScore = false"
+          @click="$router.push({ name: 'Config' })"
           :style="{ justifySelf: 'end' }"
           >确认</el-button
         >
@@ -98,9 +100,19 @@ const configStore = useConfigStore()
 
 const { configs, arithmeticList } = storeToRefs(configStore)
 
-const { completed, correctCnt, countDown } = storeToRefs(appStore)
+const { completed, correctCnt, countDown, audioRef } = storeToRefs(appStore)
 
-appStore.setCountDown(configs.value.timer)
+const stopCountDown = appStore.setCountDown(configs.value.timer, () => {
+  ElMessageBox.confirm('已经到时间啦！', '警告', {
+    confirmButtonText: '确认',
+    showCancelButton: false,
+    closeOnClickModal: false,
+    closeOnPressEscape: false,
+    type: 'warning',
+    center: true,
+    showClose: false
+  }).then(handleSubmit)
+})
 
 const goBack = () => {
   if (!completed.value) {
@@ -136,6 +148,8 @@ const score = computed(() => Number(((correctCnt.value / configs.value.cnt) * 5)
 
 const handleSubmit = () => {
   showScore.value = true
+  stopCountDown()
+  appStore.playHecai()
   appStore.submit(arithmeticList.value)
 }
 
@@ -164,18 +178,6 @@ const containerHeight = computed(() => {
   const b = window.innerHeight ?? 0
   return a > b ? '100%' : 'auto'
 })
-
-const doFinish = () => {
-  ElMessageBox.confirm('已经到时间啦！', '警告', {
-    confirmButtonText: '确认',
-    showCancelButton: false,
-    closeOnClickModal: false,
-    closeOnPressEscape: false,
-    type: 'warning',
-    center: true,
-    showClose: false
-  }).then(handleSubmit)
-}
 
 function onBeforeEnter(el) {
   gsap.set(el, {
