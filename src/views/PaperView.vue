@@ -149,8 +149,9 @@ const score = computed(() => Number(((correctCnt.value / configs.value.cnt) * 5)
 const handleSubmit = () => {
   showScore.value = true
   stopCountDown()
-  appStore.playHecai(score.value)
-  appStore.submit(arithmeticList.value)
+  appStore.submit(arithmeticList.value).then(() => {
+    appStore.playHecai(score.value)
+  })
 }
 
 const colors = [
