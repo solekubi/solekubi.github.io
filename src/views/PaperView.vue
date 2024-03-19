@@ -6,12 +6,7 @@
         <el-button :icon="Back" link size="large" @click="goBack">返回</el-button>
       </div>
       <div class="header__mid">
-        <!-- <el-countdown
-          format="mm:ss"
-          :value="countDown.end"
-          :colors="['#409eff', '#67c23a', '#FF9900']"
-          @finish="doFinish"
-        /> -->
+        <el-icon><Timer /></el-icon>
         <span> {{ countDown.format }}</span>
       </div>
       <div class="header__right">
@@ -89,7 +84,7 @@ import { useConfigStore } from '@/stores/config'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { computed, ref } from 'vue'
-import { Check, Back, View } from '@element-plus/icons-vue'
+import { Check, Back, View,Timer } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import gsap from 'gsap'
 
@@ -231,8 +226,10 @@ function onEnter(el, done) {
     column-gap: 2px;
   }
   &__mid {
-    justify-self: center;
-    align-self: center;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    grid-template-rows: repeat(2,1fr);
   }
   &__right {
     justify-self: end;
