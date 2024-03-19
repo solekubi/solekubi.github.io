@@ -16,14 +16,9 @@ export const useAppStore = defineStore('app', () => {
 
   const audioRef = ref(null)
 
-  const playCountDown = () => {
-    audioRef.value.src = '/audio/countdown.mp3'
-    audioRef.value.loop = true
-    audioRef.value.play()
-  }
-
-  const playHecai = () => {
-    audioRef.value.src = '/audio/hecai.mp3'
+  const playHecai = (score) => {
+    audioRef.value.src = score >= 3 ? '/audio/hecai.mp3':'/audio/hedaocai.wav'
+    audioRef.value.loop = false
     audioRef.value.play()
   }
 
@@ -38,6 +33,7 @@ export const useAppStore = defineStore('app', () => {
       `${countDown.minute}`.padStart(2, '0') + ':' + `${countDown.second}`.padStart(2, '0')
     const interval = setInterval(() => {
       if (countDown.second === 0 && countDown.minute === 0) {
+        audioRef.value && audioRef.value.stop()
         clearInterval(interval)
         end()
       }
@@ -46,6 +42,11 @@ export const useAppStore = defineStore('app', () => {
         countDown.minute--
       } else if (countDown.second > 0) {
         countDown.second--
+      }
+      if(countDown.minute === 0 && countDown.second == 10){
+        audioRef.value.src = '/audio/countdown.mp3'
+        audioRef.value.loop = true
+        audioRef.value.play()    
       }
       countDown.format =
         `${countDown.minute}`.padStart(2, '0') + ':' + `${countDown.second}`.padStart(2, '0')
@@ -81,7 +82,6 @@ export const useAppStore = defineStore('app', () => {
     audioRef,
     setComplete,
     setCountDown,
-    playCountDown,
     playHecai,
     submit
   }
