@@ -1,0 +1,1 @@
+import{_ as n,c as o,a as i,o as l,r as _,__tla as c}from"./index-ChcipySG.js";let t,d=Promise.all([(()=>{try{return c}catch{}})()]).then(async()=>{const a={},e={style:{padding:"10px",width:"100%",height:"100%"}};function r(h,u){const s=_("RouterView");return l(),o("div",e,[i(s)])}t=n(a,[["render",r]])});export{d as __tla,t as default};
