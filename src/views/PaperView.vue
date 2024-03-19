@@ -65,19 +65,18 @@
     <template #footer>
       <div class="dialog__footer">
         <el-button
-          type="success"
-          :icon="Check"
-          @click="$router.push({ name: 'Config' })"
-          :style="{ justifySelf: 'end' }"
-          >确认</el-button
-        >
-        <el-button
           type="danger"
-          style="justify-self: start"
           :icon="View"
           @click="$router.push({ name: 'Mistake' })"
           v-if="score < 5"
           >查看错题</el-button
+        >
+        <el-button
+          type="success"
+          :icon="Check"
+          @click="$router.push({ name: 'Config' })"
+          v-else
+          >确认</el-button
         >
       </div>
     </template>
@@ -209,7 +208,7 @@ function onEnter(el, done) {
   }
   &__footer {
     display: grid;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: 1fr;
     justify-items: center;
     align-items: center;
   }
