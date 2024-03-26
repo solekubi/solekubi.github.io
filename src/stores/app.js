@@ -17,7 +17,7 @@ export const useAppStore = defineStore('app', () => {
   const audioRef = ref(null)
 
   const playHecai = (score) => {
-    audioRef.value.src = score >= 3 ? '/audio/hecai.mp3':'/audio/hedaocai.wav'
+    audioRef.value.src = score >= 3 ? '/audio/hecai.mp3':'/audio/hedaocai.mp3'
     audioRef.value.loop = false
     audioRef.value.play()
   }

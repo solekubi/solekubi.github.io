@@ -10,7 +10,7 @@ export const useConfigStore = defineStore('config', () => {
 
   const bitOptions = ref(
     Array.from(
-      Array.from({ length: 2 }, (_, idx) => idx + 2),
+      Array.from({ length: 4 }, (_, idx) => idx + 2),
       (i) => ({
         label: `${i}`,
         value: i
@@ -31,7 +31,7 @@ export const useConfigStore = defineStore('config', () => {
 
   const typeOptions = ref(
     Array.from(
-      Array.from({ length: 5 }, (_, idx) => (idx + 1) * 10),
+      Array.from({ length: 10 }, (_, idx) => (idx + 1) * 10),
       (i) => ({
         label: `${i}以内`,
         value: i
@@ -46,7 +46,7 @@ export const useConfigStore = defineStore('config', () => {
       schema: schemaOptions.value,
       type: typeOptions.value[0],
       bit: bitOptions.value[1],
-      cnt: 15,
+      cnt: 20,
       timer: 10
     }
   } else {
@@ -68,7 +68,8 @@ export const useConfigStore = defineStore('config', () => {
     const ops = configs.schema?.map((item) => item.value)
     const bit = configs.bit.value
     const cnt = configs.cnt
-    arithmeticList.value = Array.from({ length: cnt }, (_, idx) => {
+    arithmeticList.value = []
+    Array.from({ length: cnt }, (_, idx) => {
       const numbers = Array.from({ length: val }, (_, i) => i + 1)
       let params = Array.from(
         { length: bit },
@@ -92,11 +93,11 @@ export const useConfigStore = defineStore('config', () => {
         )
         value = eval(formula)
       }
-      return {
+      arithmeticList.value.push({
         id: idx + 1,
         formula,
         value: undefined
-      }
+      }) 
     })
   }
 

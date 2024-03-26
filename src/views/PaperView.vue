@@ -174,6 +174,10 @@ const containerHeight = computed(() => {
   return a > b ? '100%' : 'auto'
 })
 
+const bodyRowLeftWidth = computed(()=> {
+  return `repeat(auto-fill, minmax(${configs.value.bit.value * 75}px, 1fr))`
+})
+
 function onBeforeEnter(el) {
   gsap.set(el, {
     scaleX: 0.25,
@@ -243,7 +247,7 @@ function onEnter(el, done) {
 .body {
   overflow: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: v-bind(bodyRowLeftWidth);
   column-gap: 5px;
   row-gap: 10px;
   &_item {
